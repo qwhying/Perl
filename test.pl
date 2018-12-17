@@ -29,14 +29,18 @@ print '@fred has ', "$fredsize elements.\n";
 # The $#name gives the max subscript (size less one).
 print "Max sub is $#fred\n";
 # Simple hash constructs
-$fred{"with"} = "without";
-$fred{"this"} = "that";
-$fred{"mountain"} = "valley";
-$fred{"left"} = "right";
-print qq/$fred{"this"}\n/;
+$frd{"with"} = "without";
+$frd{"this"} = "that";
+$frd{"mountain"} = "valley";
+$frd{"left"} = "right";
+$frd{"ad"}="adfadfadf";
+$asd{"with"}="without";
+print qq/$asd{"with"}\n/;
+print qq/$frd{"this"}\n/;
+print
 @keys = keys(%fred);
 print "Keys are @keys\n";
-
+=pod
 # Initializer for %yard.
 %yard = ( red => 'brick',
     blue => 'sky',
@@ -55,5 +59,8 @@ use strict;
 
 # Echo input to output.
 while(my $fred = <STDIN>) {
-   print $fred;
+    print $fred;
 }
+=cut
+$e
+eval

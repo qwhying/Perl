@@ -1,7 +1,5 @@
 #!/usr/bin/perl
-use strict;
 use warnings FATAL => 'all';
-use strict;
 
 #
 # This script takes a file name, opens the file, and prints the
@@ -11,6 +9,18 @@ use strict;
 #    print STDERR "You must specify exactly one argument.\n";
 #   exit 4;
 #}
+sub min {
+    @mylist = @_;
+    $min=$mylist[0];
+    foreach $item(@_)
+    {
+        if($min>$item)
+        {
+            $min=$item;
+        }
+    }
+    $min;
+}
 sub max{
     my @mylist=@_;
     my $max=$mylist[0];
@@ -26,40 +36,78 @@ sub max{
 # Open the file.
 open(INFILE,"Sina-Sohu.txt") or die "Cannot open $ARGV[0]: $!.\n";
 <INFILE>;
+=pod
 my @Date;
 my @PriceRatio;
 my @PriceMargin;
 my @Time;
 my %hashpm;
 my %hashpr;
+=cut
 my $num=0;
-while(my $l = <INFILE>) {
+
+while( $l = <INFILE>) {
 
     chomp $l;
-    my @a=split (/\t/,$l);
+     @a=split (/\t/,$l);
     #my $date="$a[0]";
     #my $time=substr($a[1],0,4);
-    my $pricemargin=$a[2]-$a[3];
-    my $priceratio=$a[2]/$a[3];
+     $pricemargin=$a[2]-$a[3];
+     $priceratio=$a[2]/$a[3];
      $Date[$num]=$a[0];
      $Time[$num]=$a[1];
+     $Sina[$num]=$a[2];
+     $Sohu[$num]=$a[3];
      $PriceMargin[$num]=$pricemargin;
      $PriceRatio[$num]=$priceratio;
     $hashpm{$pricemargin}="$a[0]\t$a[1]";
     $hashpr{$priceratio}="$a[0]\t$a[1]";
     #$PriceMargin{$date}{$time}=$pricemargin;
     #$PriceRatio{$date}{$time}=$priceratio;
-    $num++;
+    $num=$num+1;
     #print "$a[2]-$a[3]=",$a[2]-$a[3],"\n";
 }
-print $Date[0];
-print $num;
+$maxsina=max(@Sina);
+$minsina=min(@Sina);
+$maxsohu=max(@Sohu);
+$minsohu=min(@Sohu);
+$maxfluctsina=$maxsina-$minsina;
+$maxfluctsohu=$maxsohu-$minsohu;
+print $maxfluctsina," ",$maxfluctsohu,"\n";
+$ratiofluct=$maxfluctsina/$maxfluctsohu;
+print $ratiofluct,"\n";
+$i=0;
+$min=$PriceMargin[$i];
+while($Date[$i]=="120208")
+{
+
+    if($min>$PriceMargin[$i]) {
+        $min = $PriceMargin[$i];
+    }
+    $i=$i+1;
+
+}
+$max=$PriceMargin[$i];
+while($Date[$i]=="120209")
+{
+    if($max<$PriceMargin[$i])
+    {
+        $max=$PriceMargin[$i];
+    }
+    $i=$i+1;
+}
+print $min,"\n";
+print $i," ",$num;
+=pod
 my $maxpm=max(@PriceMargin);
+$minpm=min(@PriceMargin);
 print $maxpm,"\n";
 print $hashpm{$maxpm},"\n";
 my $maxpr=max(@PriceRatio);
+print qq/$maxpr/;
 print $maxpr,"\n";
 print $hashpr{$maxpr},"\n";
+print qq/$hashpr{$maxpr}/;
 close INFILE;
 =pod
 my $i09=0;
