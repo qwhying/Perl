@@ -40,6 +40,8 @@ print qq/$frd{"this"}\n/;
 print
 @keys = keys(%fred);
 print "Keys are @keys\n";
+print "adsc"."\t"."adf";
+print "adf"."fadf";
 =pod
 # Initializer for %yard.
 %yard = ( red => 'brick',
@@ -62,5 +64,3 @@ while(my $fred = <STDIN>) {
     print $fred;
 }
 =cut
-$e
-eval

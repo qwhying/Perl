@@ -1,0 +1,6 @@
+1|&max_diff|&show_diffmax
+2|&max_rate|&show_maxrate
+3|&max_in_one_minute|&show_max_in_one_minute
+4|&max_between_twodays|&show_max_between_twodays
+5|&min_diff|&show_mindiff
+6|&conclusion|print_conclusion

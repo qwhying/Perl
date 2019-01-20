@@ -1,132 +1,83 @@
-
-
-
-sub max
-{
-	@data=@_;
-	$k=$data[0];
-	foreach(@data)
-	{
-		if($k<$_)
-		{
-			$k=$_;
-		}
-			
-	}
-	return $k;
-}
-sub min
-{
-	@data=@_;
-	$k=$data[0];
-	foreach(@data)
-	{
-		if($k>$_)
-		{
-			$k=$_;
-		}
-			
-	}
-	return $k;
-}
-
-
 # Open the file.
 open(INFILE, "Sina-Sohu.txt") or die "Cannot open $ARGV[0]: $!.\n";
 
-
-$string=<INFILE>;
+<INFILE>;
 $i=0;
-while($a= <INFILE>) 
-{	
+$diffmax=0;
+$ratemax=0;
+$waveDiffamx=0;
+$waveRatemax=0;
+while($a= <INFILE>)
+{
 	chomp $a;
 	@X=split(/\t/,$a);
 	$data[$i]=$X[0];
-
 	$Time[$i]=$X[1];
 	$sina[$i]=$X[2];
 	$sohu[$i]=$X[3];
+	if($diffmax<$sina[$i]-$sohu[$i])
+	{
+		$diff[$i]=$diffmax;
+		$diffmax=$sina[$i]-$sohu[$i];
+		$oneQuestion{$diffmax}=$data[$i]."\t".$Time[$i];
+	}
+	if($ratemax<$sohu[$i]/$sina[$i])
+	{
+		$rate[$i]=$ratemax;
+		$ratemax=$sohu[$i]/$sina[$i];
+		$twoQuestion{$ratemax}=$data[$i]."\t".$Time[$i];
+	}
+	if($i>1&&($waveDiffamx<abs($diff[$i]-$diff[$i-1])))
+	{
+		$waveDiffamx=abs($diff[$i]-$diff[$i-1]);
+		$threeQuestion1{$waveDiffamx}=$data[$i]."\t".$Time[$i];
+	}
+	if($i>1&&($waveRateamx<abs($rate[$i]-$rate[$i-1])))
+	{
+		$waveRateamx=abs($rate[$i]-$rate[$i-1]);
+		$threeQuestion2{$waveRateamx}=$data[$i]."\t".$Time[$i];
+	}
 	$i++;
 }
+$size=$i;
+$luan=0;
 close INFILE;
-
-
-$size=@data;
-for($j=0;$j<$size;$j++)
+for($i=0;$i<$size;$i++)
 {
-	$diff=$sina[$j]-$sohu[$j];
-	$differenceValue{$diff}=$data[$j]."\t".$Time[$j];
-	$rate=$sina[$j]/$sohu[$j];
-	$rateValue{$rate}=$data[$j]."\t".$Time[$j];
-}
-@diffkeys=keys%differenceValue;
-$diffkey=max(@diffkeys);
-#print "The maxiture of difference in both:",$diffkey,"\n";
-#print "*********Time:",$differenceValue{$diffkey},"\n";
-@ratekeys=keys%rateValue;
-$ratekey=max(@ratekeys);
-#print "The maxiture of ratio in both:",$ratekey,"\n";
-#print "*********Time:",$rateValue{$ratekey},"\n";
-
-
-
-for($k1=0,$k2=0,$m=0,$rateChange=0,$diffChange=0;$m<$size-1;$m++)
-{
-	
-	if($diffChange<($diffkeys[$m+1]-$diffkeys[$m]))
+	if($data[$i]==120209)
 	{
-		$diffChange=$diffkeys[$m+1]-$diffkeys[$m];
-		$k1=$m;
+		last;
 	}
-	if($rateChange<($ratekeys[$m+1]-$ratekeys[$m]))
+	for($j=0;$j<$size;$j++)
 	{
-		$rateChange=$ratekeys[$m+1]-$ratekeys[$m];
-		$k2=$m;
-	}
-}
-#print "the most of changes of difference in 1 minute:",$diffkeys[$k1],"\n";
-#print "*********Time:",$differenceValue{$diffkeys[$k1]},"\n";
-#print "the most of changes of ratio in 1 minute:",$ratekeys[$k2],"\n";
-#print "*********Time:",$rateValue{$ratekeys[$k2]},"\n";
+		if(($data[$j]==120209)&&(abs($Time[$i]-$Time[$j])<60)&&($luan<abs($diff[$i]-$diff[$j])))
+		{
+			$luan=abs($diff[$i]-$diff[$j]);
+			$oneday=$diff[$i];
+			$twoday=$diff[$j];
+			$fourQuestio1{$oneday}=$data[$i]."\t".$Time[$i];
+			$fourQuestion2{$twoday}=$data[$j]."\t".$Time[$j];
+		}
 
-$subSize=$size/2;
-$temp=0;
-$k=0;
-for($i=0;$i<$subSize;$i++)
-{
-	
-	if($temp<$diffkeys[$i]-$diffkeys[$i+$subSize])
-	{
-		$temp=$diffkeys[$i]-$diffkeys[$i+$subSize];
-		$k=$i;
 	}
-	
+
 }
+
 open(OUTFILE,">>result.txt");
-print OUTFILE "����\tʱ��\t��ֵ/����";
+print OUTFILE "日期\t时间\t差值/比例";
 print OUTFILE "\n";
-print OUTFILE $differenceValue{$diffkey}."\t".$diffkey;
+print OUTFILE $oneQuestion{$diffmax}."\t".$diffmax;
 print OUTFILE "\n";
-print OUTFILE $rateValue{$ratekey}."\t".$ratekey;
+print OUTFILE $twoQuestion{$ratemax}."\t".$ratemax;
 print OUTFILE "\n"."************************************\n";
-print OUTFILE $differenceValue{$diffkeys[$k1]}."\t".$diffkeys[$k1];
+print OUTFILE $threeQuestion1{$waveDiffamx}."\t".$waveDiffamx;
 print OUTFILE "\n";
-print OUTFILE $rateValue{$ratekeys[$k2]}."\t".$ratekeys[$k2];
+print OUTFILE $threeQuestion2{$waveRateamx}."\t".$waveRateamx;
 print OUTFILE "\n"."************************************\n";
-print OUTFILE $differenceValue{$diffkeys[$k]}."\t".$diffkeys[$k];
+print OUTFILE $fourQuestio1{$oneday}."\t".$oneday;
 print OUTFILE "\n";
-print OUTFILE $differenceValue{$diffkeys[$k+$subSize]}."\t".$diffkeys[$k+$subSize];
+print OUTFILE $fourQuestion2{$twoday}."\t".$twoday;
 print OUTFILE "\n"."************************************\n";
-
-
-
-
-
-
-
-
-
-
 
 
 

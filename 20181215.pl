@@ -88,6 +88,7 @@ while($Date[$i]=="120208")
 
 }
 $max=$PriceMargin[$i];
+print $i;
 while($Date[$i]=="120209")
 {
     if($max<$PriceMargin[$i])
@@ -96,8 +97,10 @@ while($Date[$i]=="120209")
     }
     $i=$i+1;
 }
+print $i;
 print $min,"\n";
-print $i," ",$num;
+print "a";
+print $i,"\n",$num;
 =pod
 my $maxpm=max(@PriceMargin);
 $minpm=min(@PriceMargin);

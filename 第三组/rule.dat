@@ -1,0 +1,4 @@
+1|&max_diff|&show_out1
+2|&max_rate|&show_out2
+3|&max_in_one_minute|&show_out3
+4|&max_between_twodays|&show_out4
